@@ -16,10 +16,19 @@ exports.createMessage = async (req, res) => {
 
 // Get all messages
 exports.getAllMessages = async (req, res) => {
+  const { sentTo } = req.query;
+
   try {
-    const messages = await Message.find().populate('sentBy').populate('sentTo');
+    const filter = sentTo ? { sentTo: sentTo } : {};
+    const messages = await Message.find(filter)
+      .populate('sentBy', 'name') // Populate sender details if needed
+      .populate('sentTo', 'name'); // Populate recipient details if needed
+
     res.status(200).json(messages);
   } catch (err) {
     res.status(500).json({ message: 'Failed to retrieve messages', error: err.message });
   }
 };
+
+
+

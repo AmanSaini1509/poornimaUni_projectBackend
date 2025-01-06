@@ -34,7 +34,7 @@ exports.login = async (req, res) => {
     await user.save();
 
     console.log('Login successful for user:', username);
-    res.status(200).json({ token, role: user.role });
+    res.status(200).json({ token, role: user.role, _id: user._id  });
 
   } catch (err) {
     console.error('Login Error:', err);
