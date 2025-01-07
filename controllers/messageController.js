@@ -16,19 +16,18 @@ exports.createMessage = async (req, res) => {
 
 // Get all messages
 exports.getAllMessages = async (req, res) => {
-  const { sentTo } = req.query;
+  const { sentTo } = req.query; // Optionally filter by recipient ID
 
   try {
-    const filter = sentTo ? { sentTo: sentTo } : {};
+    const filter = sentTo ? { sentTo: sentTo } : {}; // Filter by sentTo if provided
     const messages = await Message.find(filter)
-      .populate('sentBy', 'name') // Populate sender details if needed
-      .populate('sentTo', 'name'); // Populate recipient details if needed
+      .populate('sentBy', 'username') // Populate the sender's username
+      .populate('sentTo', 'username') // Populate the recipients' usernames
+      .exec(); // Ensure the query executes properly
 
     res.status(200).json(messages);
   } catch (err) {
     res.status(500).json({ message: 'Failed to retrieve messages', error: err.message });
   }
 };
-
-
 
